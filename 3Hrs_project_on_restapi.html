@@ -32,7 +32,7 @@
         <h1>Products</h1>
 
     </ul>
-
+<li id="total></li>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script>
         function save(event) {
@@ -84,6 +84,10 @@
 
 
         }
+        var ul = document.getElementById('total')
+        var totalprice = document.createElement('h1')
+        totalprice.textContent = "Total Worth Price:"
+        ul.appendChild(totalprice)
         function deleteUser(userId) {
             axios.delete(`https://crudcrud.com/api/80a59dc7430d4f00b9c327dbc59d85d4/product/${userId}`)
                 .then((response) => {
