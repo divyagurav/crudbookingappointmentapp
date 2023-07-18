@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos</title>
+</head>
+
+<body>
+    <form onsubmit="addItem(event)">
+        <labelfor="todoname">todo Name:</label>
+            <input type="text" id="todoname" name="todoname">
+            <label for="description">Description</label>
+            <input type="text" id="dis" name="description">
+            <button>Add Item</button>
+    </form>
+    <ul id="list">todos remaining</ul><br><br>
+
+    <ul id="done">todos done</ul>
+</body>
+
+<script>
+
+    function addItem(event) {
+        event.preventDefault();
+
+        const todoname = event.target.todoname.value;
+        const description = event.target.description.value;
+
+        const obj = {
+            todoname,
+            description
+
+
+        };
+
+        showonscreen(obj);
+    }
+
+
+
+    function showonscreen(obj) {
+        document.getElementById('todoname').value = '';
+        document.getElementById('dis').value = '';
+        const parent = document.getElementById('list');
+
+        const child = document.createElement('li');
+        child.textContent = `${obj.todoname}-${obj.description}`
+
+        const add = document.createElement('input');
+        add.type = "button";
+        add.value = "add";
+        const done = document.createElement('input')
+
+        done.type = "button";
+        done.value = 'X';
+
+        add.onclick = () => {
+            parent.removeChild(child);
+            //  const todos = parent.removeChild(child);
+            const parentnode = document.getElementById('done');
+            const childnode = document.createElement('li');
+            childnode.textContent = obj.todoname + "-" + obj.description;
+
+
+            //   childnode.appendChild(todos);
+            parentnode.appendChild(childnode);
+
+        }
+
+
+        child.appendChild(add);
+        child.appendChild(done);
+        parent.appendChild(child);
+
+
+
+
+
+
+
+    }
+
+
+
+</script>
+
+</html>
