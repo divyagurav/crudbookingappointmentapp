@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos</title>
+</head>
+
+<body>
+    <form onsubmit="addItem(event)">
+        <labelfor="todoname">todo Name:</label>
+            <input type="text" id="todoname" name="todoname">
+            <label for="description">Description</label>
+            <input type="text" id="dis" name="description">
+            <button>Add Item</button>
+    </form>
+    <h1>todos remaining</h1>
+    <ul id="list"></ul><br><br>
+
+    <h1>todos done</h1>
+    <ul id="done"></ul>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+<script>
+
+    function addItem(event) {
+        event.preventDefault();
+
+        const todoname = event.target.todoname.value;
+        const description = event.target.description.value;
+        const flag = true;
+        const obj = {
+            todoname,
+            description,
+            flag
+
+
+        };
+        axios.post('https://crudcrud.com/api/6d46a38517d44c49b45da9c38abe9c32/todo', obj)
+            .then((res) => showonscreen(res.data));
+        //   showonscreen(obj);
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+
+        axios.get("https://crudcrud.com/api/6d46a38517d44c49b45da9c38abe9c32/todo")
+            .then((res) => {
+
+                for (let i = 0; i < res.data.length; i++) {
+
+                    if (res.data[i].flag === false) {
+                        showonscreen(res.data[i])
+                    } else {
+                        if (res.data[i].flag === true) {
+                            const parentnode = document.getElementById('done');
+
+                            const childnode = `<li>${res.data[i].todoname}-${res.data[i].description}`
+
+                            parentnode.innerHTML = parentnode.innerHTML + childnode;
+
+                        }
+
+                    }
+
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
+
+
+    })
+
+
+
+    function showonscreen(user) {
+        document.getElementById('todoname').value = '';
+        document.getElementById('dis').value = '';
+        const parent = document.getElementById('list');
+
+        const child = document.createElement('li');
+        child.textContent = `${user.todoname}-${user.description} `
+
+        const add = document.createElement('input');
+        add.type = "button";
+        add.value = "add";
+        const done = document.createElement('input')
+
+        done.type = "button";
+        done.value = 'X';
+
+
+        add.onclick = (userId) => {
+            axios.put(`https://crudcrud.com/api/6d46a38517d44c49b45da9c38abe9c32/todo/${userId}`, {
+                ' flag': true
+            })
+                .then((res) => {
+                    console.log(res);
+
+                })
+            parent.removeChild(child);
+            const parentnode = document.getElementById('done');
+            const childnode = document.createElement('li');
+            childnode.textContent = user.todoname + "-" + user.description;
+            parentnode.appendChild(childnode);
+
+
+
+
+        }
+
+        done.onclick = (userId) => {
+            parent.removeChild(child);
+
+            axios.delete(`https://crudcrud.com/api/6d46a38517d44c49b45da9c38abe9c32/todo/${userId}`)
+                .then(res => console.log(res));
+        }
+
+
+
+
+
+
+
+        child.appendChild(add);
+        child.appendChild(done);
+        parent.appendChild(child);
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
